@@ -1,3 +1,5 @@
+require 'chronic'
+
 class Appointment
 
   attr_reader :id, :doctor_id, :patient_id, :date, :cost
@@ -11,7 +13,8 @@ class Appointment
   end
 
   def save
-    results = DB.exec("INSERT INTO appointment (id, doctor_id, patient_id, date, cost) VALUES (#{@id}, #{@doctor_id}, #{@patient_id}, '#{date}', '#{cost}') RETURNING id;")
+    chroniced = Chronic.parse(@date)
+    results = DB.exec("INSERT INTO appointment (id, doctor_id, patient_id, date, cost) VALUES (#{@id}, #{@doctor_id}, #{@patient_id}, '#{chroniced}', '#{cost}') RETURNING id;")
     @id = results.first['id'].to_i
   end
 
